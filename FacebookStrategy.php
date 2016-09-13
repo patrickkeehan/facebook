@@ -65,6 +65,7 @@ class FacebookStrategy extends OpauthStrategy{
 			if (!empty($results) && !empty($results['access_token'])){
 				$me = $this->me($results['access_token']);
 
+				$data = array('access_token' => $results['access_token'], 'fields' => 'email')
 				$this->auth = array(
 					'provider' => 'Facebook',
 					'uid' => $me->id,
@@ -75,6 +76,9 @@ class FacebookStrategy extends OpauthStrategy{
 					'credentials' => array(
 						'token' => $results['access_token'],
 						'expires' => date('c', time() + $results['expires'])
+					),
+					'url' => array(
+						'request' => 'https://graph.facebook.com/me'.'?'.http_build_query($data, '', '&')
 					),
 					'raw' => $me
 				);
