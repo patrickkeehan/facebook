@@ -1,5 +1,7 @@
 Opauth-Facebook
 =============
+I forked the repo mainly because of http://stackoverflow.com/questions/31858341/facebook-user-graph-does-not-return-email-php - facebook is not returning email and other details without specifiying a fields URL parameter.
+
 [Opauth][1] strategy for Facebook authentication.
 
 Implemented based on https://developers.facebook.com/docs/authentication/
@@ -33,7 +35,7 @@ Required parameters:
 )
 ```
 
-Even though `scope` is an optional configuration parameter for Opauth-Facebook, for most cases you would like to explicitly define it. It should be defined in a comma-separated string. 
+Even though `scope` is an optional configuration parameter for Opauth-Facebook, for most cases you would like to explicitly define it. It should be defined in a comma-separated string.
 
 Refer to [Facebook Permissions Reference](https://developers.facebook.com/docs/authentication/permissions/) for list of valid permissions..
 
