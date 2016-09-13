@@ -2,9 +2,9 @@
 /**
  * Facebook strategy for Opauth
  * based on https://developers.facebook.com/docs/authentication/server-side/
- * 
+ *
  * More information on Opauth: http://opauth.org
- * 
+ *
  * @copyright    Copyright © 2012 U-Zyn Chua (http://uzyn.com)
  * @link         http://opauth.org
  * @package      Opauth.FacebookStrategy
@@ -12,13 +12,13 @@
  */
 
 class FacebookStrategy extends OpauthStrategy{
-	
+
 	/**
 	 * Compulsory config keys, listed as unassociative arrays
 	 * eg. array('app_id', 'app_secret');
 	 */
 	public $expects = array('app_id', 'app_secret');
-	
+
 	/**
 	 * Optional config keys with respective default values, listed as associative arrays
 	 * eg. array('scope' => 'email');
@@ -42,10 +42,10 @@ class FacebookStrategy extends OpauthStrategy{
 		if (!empty($this->strategy['response_type'])) $params['response_type'] = $this->strategy['response_type'];
 		if (!empty($this->strategy['display'])) $params['display'] = $this->strategy['display'];
 		if (!empty($this->strategy['auth_type'])) $params['auth_type'] = $this->strategy['auth_type'];
-		
+
 		$this->clientGet($url, $params);
 	}
-	
+
 	/**
 	 * Internal callback, after Facebook's OAuth
 	 */
@@ -59,7 +59,7 @@ class FacebookStrategy extends OpauthStrategy{
 				'code' => trim($_GET['code'])
 			);
 			$response = $this->serverGet($url, $params, null, $headers);
-			
+
 			parse_str($response, $results);
 
 			if (!empty($results) && !empty($results['access_token'])){
@@ -78,7 +78,7 @@ class FacebookStrategy extends OpauthStrategy{
 					),
 					'raw' => $me
 				);
-				
+
 				if (!empty($me->email)) $this->auth['info']['email'] = $me->email;
 				if (!empty($me->username)) $this->auth['info']['nickname'] = $me->username;
 				if (!empty($me->first_name)) $this->auth['info']['first_name'] = $me->first_name;
@@ -86,13 +86,13 @@ class FacebookStrategy extends OpauthStrategy{
 				if (!empty($me->location)) $this->auth['info']['location'] = $me->location->name;
 				if (!empty($me->link)) $this->auth['info']['urls']['facebook'] = $me->link;
 				if (!empty($me->website)) $this->auth['info']['urls']['website'] = $me->website;
-				
+
 				/**
 				 * Missing optional info values
 				 * - description
 				 * - phone: not accessible via Facebook Graph API
 				 */
-				
+
 				$this->callback();
 			}
 			else{
@@ -113,19 +113,19 @@ class FacebookStrategy extends OpauthStrategy{
 				'message' => $_GET['error_description'],
 				'raw' => $_GET
 			);
-			
+
 			$this->errorCallback($error);
 		}
 	}
-	
+
 	/**
 	 * Queries Facebook Graph API for user info
 	 *
-	 * @param string $access_token 
+	 * @param string $access_token
 	 * @return array Parsed JSON results
 	 */
 	private function me($access_token){
-		$me = $this->serverGet('https://graph.facebook.com/me', array('access_token' => $access_token), null, $headers);
+		$me = $this->serverGet('https://graph.facebook.com/me', array('access_token' => $access_token,'fields' => 'id,name,email'), null, $headers);
 		if (!empty($me)){
 			return json_decode($me);
 		}
